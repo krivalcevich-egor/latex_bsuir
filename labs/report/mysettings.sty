@@ -1,0 +1,75 @@
+\usepackage[utf8]{inputenc} % Поддержка UTF-8 кодировки
+
+
+\usepackage[russianb]{babel}        % Русификация документа
+\usepackage{fancyhdr}               % Расширенное управление колонтитулами
+\usepackage{tempora}                % Шрифт Tempora (похож на Times New Roman)
+\usepackage{newtxmath}              % Математические символы, совместимые с Tempora
+\usepackage{caption}                % Настройка подписей к рисункам и таблицам
+\usepackage{graphics}               % Подключение графики (например, \includegraphics)
+\usepackage{multirow}               % Поддержка объединения строк в таблицах
+\usepackage{float}                  % Управление расположением плавающих объектов (рисунков, таблиц)
+\usepackage{listings}               % Подсветка и вставка исходного кода
+\usepackage{listingsutf8}           % Поддержка UTF-8 в listings
+\usepackage[footskip=7mm]{geometry} % Управление полями страницы (включая отступ снизу)
+\ProvidesPackage{mysettings}        % Объявление пакета
+\RequirePackage{titlesec}           % Настройка заголовков разделов
+
+% Геометрия страницы: A4, отступы по ГОСТ
+\geometry{a4paper, total={170mm,257mm}, 
+  left=3cm, 
+  right=1.5cm, 
+  top=2cm, 
+  bottom=2.7cm}
+
+% Размер абзацного отступа
+\setlength{\parindent}{1.25cm}
+
+% Межстрочный интервал (приблизительно 1.15)
+\linespread{1.15}
+
+% Запрет на "висячие строки", улучшение переносов
+\sloppy
+
+% Настройка внешнего вида заголовков разделов
+\titleformat{\section}[block]{\normalfont\fontsize{14}{16}\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\normalfont\fontsize{14}{16}\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[block]{\normalfont\fontsize{14}{16}\bfseries}{\thesubsubsection}{1em}{}
+
+% Отступы перед и после заголовков
+\titlespacing{\section}{1.25cm}{1.5ex plus .2ex}{1.15ex plus .2ex}
+\titlespacing{\subsection}{1.25cm}{1.5ex plus .2ex}{1.15ex plus .2ex}
+\titlespacing{\subsubsection}{1.25cm}{1.5ex plus .2ex}{1.15ex plus .2ex}
+
+% Подписи к рисункам: без двоеточия, выравнивание по центру
+\captionsetup[figure]{labelsep=none, singlelinecheck=false, justification=centering, name={Рисунок}}
+
+% Формат заголовка рисунка: "Рисунок N -- Описание"
+\DeclareCaptionLabelFormat{custom}{#1~#2 -- }
+\captionsetup[figure]{labelformat=custom}
+
+% Настройка пакета listings для отображения кода
+\AtEndPreamble{
+  \lstset{
+    inputencoding=utf8,
+    extendedchars=true,
+    keepspaces=true,
+    language=TeX, % По умолчанию язык вставляемого кода
+    basicstyle=\fontsize{10}{14}\ttfamily,     % Стиль основного текста кода
+    commentstyle=\fontsize{10}{14}\ttfamily,   % Стиль комментариев
+  }
+}
+
+% Отключение колонтитулов на первой странице
+\pagestyle{empty}
+
+% Переопределение оформления параграфов (если будут использоваться)
+\makeatletter
+\renewcommand\paragraph{%
+    \@startsection{paragraph}{4}{\z@}%
+    {-3.25ex \@plus -1ex \@minus -.2ex}%
+    {1.5ex plus .2ex}%
+    {\normalfont\normalsize\bfseries}%
+}
+\makeatother
+
