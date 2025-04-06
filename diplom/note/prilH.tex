@@ -1,70 +1,19 @@
 \clearpage
 \phantomsection% ensures hyperref works properly
-\addcontentsline{toc}{section}{\hspace*{-1em}Приложение З (Обязательное) Verilog описание устройства}\par
+\addcontentsline{toc}{section}{\hspace*{-1em}Приложение З (Обязательное) Пример использования verilog}\par
 
 \normalsize
 \begin{center}
   \textbf{ПРИЛОЖЕНИЕ З} \\
   \textbf{(Обязательное)} \\
-  \textbf{Verilog описание устройства}
+  \textbf{Пример использования verilog}
 \end{center}
 
 % \clearpage
 
-% % Установка размера страницы A3 в альбомной ориентации
-% \pdfpagewidth=420mm
-% \pdfpageheight=297mm
+Пример использования verilog:
 
-% \thispagestyle{empty} % Убрать номер страницы
-
-% Вставка листа A3
-% \includepdf[pages=-, pagecommand={}, fitpaper, offset=0 0]{prilD2.pdf}
-Модуль с параметрами:
-
-\lstinputlisting[language=Verilog]{C/nn_param_pkg.sv}
-
-Модуль верхнего уровня:
-
-\lstinputlisting[language=Verilog]{C/fc.sv}
-
-Модуль памяти изображения:
-
-\lstinputlisting[language=Verilog]{C/img_mem.sv}
-
-Модуль обработки пикселя:
-
-\lstinputlisting[language=Verilog]{C/PE_rc.sv}
-\lstinputlisting[language=Verilog]{C/PE_rco.sv}
-
-Модуль памяти строк:
-
-\lstinputlisting[language=Verilog]{C/ROM_row.sv}
-
-Модуль памяти столбцов:
-
-\lstinputlisting[language=Verilog]{C/ROM_col.sv}
-
-Модуль памяти выходных весов:
-
-\lstinputlisting[language=Verilog]{C/ROM_w_out.sv}
-
-Модуль MAC:\@
-
-\lstinputlisting[language=Verilog]{C/mac_core.sv}
-
-Модуль умножителя:
-
-\lstinputlisting[language=VHDL]{C/ADD1.vhd}
-\lstinputlisting[language=VHDL]{C/HA.vhd}
-\lstinputlisting[language=VHDL]{C/MUL_NxN.vhd}
-
-Модуль тангенса:
-
-\lstinputlisting[language=Verilog]{C/tanh_function.sv}
-
-Модуль softmax:
-
-\lstinputlisting[language=Verilog]{C/softmax.sv}
+% \lstinputlisting[language=Verilog]{C/softmax.sv}
 
 % Восстановление размера страницы A4
 \pdfpagewidth=210mm
