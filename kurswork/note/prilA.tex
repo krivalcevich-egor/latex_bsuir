@@ -1,0 +1,27 @@
+\clearpage
+\phantomsection% ensures hyperref works properly
+\addcontentsline{toc}{section}{\hspace*{-1em}Приложение А (Обязательное) Пример вставки pdf}\par
+
+\normalsize
+\begin{center}
+  \textbf{ПРИЛОЖЕНИЕ А} \\
+  \textbf{(Обязательное)} \\
+  \textbf{Пример вставки pdf}
+\end{center}
+
+\clearpage
+
+% Установка размера страницы A3 в альбомной ориентации
+% \pdfpagewidth=420mm
+% \pdfpageheight=297mm
+
+\thispagestyle{empty} % Убрать номер страницы
+
+% Вставка листа A3
+% \includepdf[pages=-, pagecommand={}, fitpaper, offset=0 0]{prilA.pdf}
+
+% Восстановление размера страницы A4
+\pdfpagewidth=210mm
+\pdfpageheight=297mm
+
+\clearpage

@@ -1,0 +1,88 @@
+\documentclass[a4paper,14pt]{extreport} % Основной класс документа — отчёт, ГОСТ-совместимый, 14 pt шрифт
+
+\usepackage{bsuir2025}                  % Подключаем наш собственный стиль оформления
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+% ТИТУЛЬНЫЕ ЛИСТЫ
+% -----------------------------------------------------------------------------
+\clearpage
+\thispagestyle{empty}            % Без номера страницы
+\include{title}                  % Основной титульный лист
+
+% -----------------------------------------------------------------------------
+% ТЕХНИЧЕСКОЕ ЗАДАНИЕ (скан, PDF)
+% -----------------------------------------------------------------------------
+\clearpage
+\thispagestyle{empty}
+\includepdf[pages=1, pagecommand={}, fitpaper, offset=0 0]{TZ.pdf} % Вставляем первую страницу ТЗ (PDF)
+
+\clearpage
+\thispagestyle{empty} 
+\includepdf[pages=2, pagecommand={}, fitpaper, offset=0 0]{TZ.pdf} % Вставляем вторую страницу ТЗ
+
+% -----------------------------------------------------------------------------
+% ОСНОВНОЙ ДОКУМЕНТ
+% -----------------------------------------------------------------------------
+
+\normalfont                         % Устанавливаем стандартный шрифт
+\newpage                            % Устанавливаем новую страницу
+\setcounter{page}{4}                % Устанавливаем нумерацию с 4 страницы
+
+% Колонтитулы
+\pagestyle{fancy}
+\fancyhf{}                          % Очищаем все колонтитулы
+\fancyfoot[R]{\thepage}             % Номер страницы справа внизу
+\renewcommand{\headrulewidth}{0pt}  % Без линии сверху
+\renewcommand{\footrulewidth}{0pt}  % Без линии снизу
+
+% Для "plain"-страниц (например, после \chapter)
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[R]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Настройки шрифта
+\normalfont\fontsize{14pt}{14pt}\selectfont
+
+% -----------------------------------------------------------------------------
+% ОГЛАВЛЕНИЕ
+% -----------------------------------------------------------------------------
+\let\oldtableofcontents=\tableofcontents
+\renewcommand{\tableofcontents}{\begingroup\parskip=0pt \oldtableofcontents\endgroup}
+
+\noindent\tableofcontents
+\addtocontents{toc}{\protect\thispagestyle{fancy}}  % Устанавливаем стиль fancy в оглавлении
+
+% Разрешаем переносы после оглавления
+\hyphenpenalty=50
+\tolerance=2000
+
+% -----------------------------------------------------------------------------
+% ВКЛЮЧЕНИЕ ОСНОВНЫХ РАЗДЕЛОВ
+% (Каждая секция — отдельный .tex-файл)
+% -----------------------------------------------------------------------------
+\include{intro}               % Введение
+\include{part1}               % Глава 1
+\include{part2}               % Глава 2
+\include{part3}               % Глава 3
+\include{part4}               % Глава 4
+\include{part5}               % Глава 5 
+\include{conclusion}          % Заключение
+\include{biblio}              % Библиография 
+
+% -----------------------------------------------------------------------------
+% ПРИЛОЖЕНИЯ
+% -----------------------------------------------------------------------------
+\include{prilA}               % Приложение А 
+\include{prilB}               % Приложение Б
+\include{prilC}               % Приложение В 
+\include{prilD}               % Приложение Г 
+\include{prilE}               % Приложение Д   
+
+\include{91-schemPril}
+
+\end{document}

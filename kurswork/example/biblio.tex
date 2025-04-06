@@ -1,0 +1,49 @@
+\clearpage % Новый лист для списка литературы
+\renewcommand{\refname}{\begin{center}СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ\end{center}\vspace*{-2.0em}} % Установка заголовка списка
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{[#1]\hfill} % Выравнивание номера ссылки
+\renewenvironment{thebibliography}[1]
+     {\section*{\refname}%
+      \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+      \begin{list}{\@biblabel{\arabic{enumi}}}{%
+          \setlength{\leftmargin}{0pt} % Убираем отступы
+          \setlength{\labelwidth}{1em} % Убираем ширину метки
+          \setlength{\itemindent}{1.25cm} % Убираем отступы на первой строке
+          \setlength{\itemsep}{0.15em} % Убираем отступы между элементами
+          \setlength{\parsep}{0pt} % Убираем дополнительный вертикальный отступ
+          \usecounter{enumi}%
+          \let\p@enumi\@empty
+          \renewcommand{\theenumi}{\arabic{enumi}}}%
+      \sloppy
+      \clubpenalty4000
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\end{list}}
+\makeatother
+
+\addcontentsline{toc}{section}{\hspace*{-1em}Список использованных источников}\par
+
+\begin{thebibliography}{99}
+    \setlength{\itemindent}{1.95cm} % Убираем отступы для первой строки
+    \setlength{\leftmargin}{1.25cm} % Обнуляем отступы для правильного форматирования
+    \setlength{\labelsep}{2mm} % Убираем стандартный отступ после номера
+
+    \raggedright% Выравнивание по левому краю (без отступов)
+    \justifying
+    \bibitem{GonW} Гонсалес Р., Вудс Р.
+    Цифровая обработка изображений Издание 3-е, исправленное и дополненное
+    Москва: Техносфера, 2012. – 1104 с. 
+    
+    \bibitem{fat} Fat32 — что такое [Электронный ресурс] – Электронные данные – Режим доступа: https://skyeng.ru/magazine/wiki/it-industriya/chto-takoe-fat32/
+    
+    \bibitem{ESP-S} ESP32-S Specification [Электронный ресурс] – Электронные данные – Режим доступа: https://agelectronica.lat/pdfs/textos/E/ESP-32S.PDF
+
+    \bibitem{OV} OV2640 Color CMOS UXGA(2.0 MegaPixel) [Электронный ресурс] – Электронные данные – Режим доступа: https://www.waveshare.com/w/upload/9/92/Ov2640\_ds\_1.8\_.pdf
+    
+    \bibitem{ESP-Wrover} ESP-WROVER-KIT\_20161026A [Электронный ресурс] – Электронные данные – Режим доступа: https://dl.espressif.com/dl/schematics/ESP-WROVER-KIT\_SCH-2.pdf
+    
+    \bibitem{ESP-CAM} ESP32-CAM Video Streaming Web Server [Электронный ресурс] – Электронные данные – Режим доступа: https://randomnerdtutorials.com/esp32-cam-video-streaming-web-server-camera-home-assistant/
+
+
+\end{thebibliography}
