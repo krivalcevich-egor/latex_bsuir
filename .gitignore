@@ -1,0 +1,44 @@
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
+*.out
+*.gz
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.brf
+
+# Editor backup files
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Overleaf вспомогательные файлы (если загружаешь из Overleaf)
+output/
+project.log
+
+# VSCode & TexStudio settings (если используешь)
+.vscode/
+*.bak
+*.backup
+*.synctex(busy)
+
+# Автогенерируемые TeX-файлы
+*.nav
+*.snm
+*.vrb
+
+# Папки с двоичными исходниками (например, AutoCAD)
+Autocad/*.bak
+Autocad/*.tmp

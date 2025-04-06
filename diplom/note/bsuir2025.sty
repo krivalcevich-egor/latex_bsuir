@@ -1,0 +1,182 @@
+\ProvidesPackage{bsuir2025}[2025/04/06 Custom BSUIR style]
+
+% -----------------------------------------------------------------------------
+% Подключение необходимых пакетов
+% -----------------------------------------------------------------------------
+\RequirePackage[14pt]{extsizes}         % Размер шрифта
+\RequirePackage[T2A]{fontenc}           % Поддержка кириллицы (кодировка)
+\RequirePackage[utf8]{inputenc}         % UTF-8 ввод
+\RequirePackage{amsmath}                % Переос формул
+\RequirePackage[russianb]{babel}        % Русская локализация 
+\RequirePackage{fancyhdr}               % Кастомные колонтитулы
+\RequirePackage{tempora}                % Шрифт Tempora
+\RequirePackage{newtxmath}              % Красивые мат. символы
+\RequirePackage{caption}                % Управление подписями
+\RequirePackage{graphicx}               % Подключение изображений
+\RequirePackage{multirow}               % Объединение строк в таблицах
+\RequirePackage{float}                  % Позиционирование плавающих объектов
+\RequirePackage{etoolbox}               % Расширения LaTeX макросов
+\RequirePackage{longtable}              % Таблицы на несколько страниц
+\RequirePackage{tabularx}               % Таблицы с автоматической шириной
+\RequirePackage{titlesec}               % Кастомизация заголовков
+\RequirePackage{ragged2e}               % Выравнивание текста
+\RequirePackage{url}                    % Форматирование URL-ов
+\RequirePackage[normalem]{ulem}         % Подчеркивания, зачёркивания
+\RequirePackage{chngcntr}               % Управление счётчиками
+\RequirePackage{enumitem}               % Кастомизация списков
+\RequirePackage{titletoc}               % Управление содержанием
+\RequirePackage[footskip=7mm]{geometry} % Геометрия страницы + отступ под №
+\RequirePackage{listings}               % Листинги кода
+\RequirePackage{xcolor}                 % Цвета
+\RequirePackage{ifthen}                 % Условия
+\RequirePackage{tocloft}                % Управление оглавлением
+\RequirePackage{microtype}              % Улучшение типографики
+\RequirePackage{hyphenat}               % Управление переносами
+\RequirePackage{pdfpages}               % Вставка PDF
+\RequirePackage{listingsutf8}           % Поддержка UTF-8 в листингах
+
+% -----------------------------------------------------------------------------
+% Геометрия страницы 
+% -----------------------------------------------------------------------------
+\geometry{
+  a4paper,
+  left=3cm,
+  right=1.5cm,
+  top=2cm,
+  bottom=2.7cm
+}
+\setlength{\parindent}{1.25cm}          % Абзацный отступ
+\linespread{1.15}                       % Межстрочный интервал
+\sloppy                                 % Устранение переполнения строк
+
+% -----------------------------------------------------------------------------
+% Настройка содержания 
+% -----------------------------------------------------------------------------
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}                          % Точки между разделом и №
+\renewcommand{\cfttoctitlefont}{\hspace{0.38\textwidth}\bfseries\MakeUppercase} % Центрирование и капс
+\renewcommand{\cftaftertoctitle}{\hfill}                                        % Выравнивание по правому краю
+\renewcommand{\contentsname}{\bfseries\MakeUppercase Содержание}                % Заголовок оглавления
+\setlength{\cftbeforetoctitleskip}{-1em}                                        % Уменьшение отступа до заголовка
+\setlength{\cftaftertoctitleskip}{1em}                                          % Отступ после заголовка
+\setlength{\cftchapindent}{0em}                                                 % Отступы в главе
+\setlength{\cftsecindent}{0cm}                                                  % Отступы в секции
+\setlength{\cftsubsecindent}{1em}                                               % Отступы в пункте
+\setlength{\cftchapnumwidth}{1em}                                               % Ширина под номер
+\setlength{\cftsecnumwidth}{2em}                                                % Ширина под номер
+\setlength{\cftsubsecnumwidth}{3em}                                             % Ширина под номер
+\renewcommand{\cftsecaftersnum}{\hspace{0.5em}}                                 % Пробел после номера
+\renewcommand{\cftsubsecaftersnum}{\hspace{0.5em}}                              % Пробел после номера
+
+% -----------------------------------------------------------------------------
+% Оформление заголовков 
+% -----------------------------------------------------------------------------
+\titleformat{\chapter}[hang]
+  {\raggedright\bfseries\fontsize{14pt}{14pt}\selectfont}
+  {\hspace{12.5mm}\thechapter}
+  {2mm}
+  {}
+\titlespacing*{\chapter}{12.5mm}{-1em}{1\baselineskip}
+
+\titleformat{\section}[hang]
+  {\raggedright\bfseries\fontsize{14pt}{14pt}\selectfont}
+  {\hspace{12.5mm}\thesection}
+  {2mm}
+  {}
+\titlespacing*{\section}{12.5mm}{1\baselineskip}{1\baselineskip}
+
+\titleformat{\subsection}[hang]
+  {\raggedright\bfseries\fontsize{14pt}{14pt}\selectfont}
+  {\hspace{12.5mm}\thesubsection}
+  {2mm}
+  {}
+\titlespacing*{\subsection}{12.5mm}{1\baselineskip}{1\baselineskip}
+
+% Оформление заголовков с номером и без в содержании
+\titlecontents{chapter}[0em]
+  {\normalfont}
+  {\contentslabel{1em}}
+  {}
+  {\dotfill\contentspage}
+  [\vspace{0em}]
+
+\titlecontents{chapter*}[0em]
+  {\normalfont}
+  {\contentslabel{0em}}
+  {}
+  {\dotfill\contentspage}
+  [\vspace{0em}]
+
+% Заголовок "Содержание"
+\addto\captionsrussian{
+  \def\contentsname{Содержание}
+}
+
+% -----------------------------------------------------------------------------
+% Переносы и разрывы строк
+% -----------------------------------------------------------------------------
+\hyphenpenalty=10000                     % Запрет переносов
+\tolerance=10000                         % Максимальная терпимость к разрывам
+\pretocmd{\tableofcontents}{\sloppy}{}{} % Применение \sloppy к оглавлению
+
+% ---------------------------------------------
+% Настройка отображения листингов кода
+% ---------------------------------------------
+\lstset{
+    basicstyle=\ttfamily\fontsize{12}{12}\selectfont,                % Шрифт и размер
+    commentstyle=\ttfamily\fontsize{12}{12}\selectfont\color{green}, % Комментарии — зелёные
+    xleftmargin=1em,                                                 % Отступ слева
+    language=python,                                                 % Язык по умолчанию — Python
+    breaklines=true,                                                 % Перенос строк
+}
+
+% ---------------------------------------
+% Кастомные команды для вставки рисунков
+% ---------------------------------------
+\counterwithin{figure}{chapter} 
+% Настройка подписей к рисункам: "Рисунок" с длинным тире и обычной нумерацией
+\captionsetup[figure]{labelformat=default, labelsep=endash, name=Рисунок}
+
+% ---------------------------------------------
+% Команда для вставки одного изображения с подписью
+% Аргументы:
+%   #1 — label (метка для ссылки, напр. fig:logo)
+%   #2 — путь к изображению
+%   #3 — подпись
+%   #4 — ширина изображения (напр. 0.8\textwidth)
+% ---------------------------------------------
+\newcommand{\insertfigure}[4]{%
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=#4]{#2}
+    \caption{#3}
+    \label{fig:#1}
+  \end{figure}
+}
+
+% -----------------------------------------------------------------------------
+% Гибкая команда для вставки двух изображений — рядом или друг под другом
+% Аргументы:
+%   #1 — путь к первому изображению
+%   #2 — путь ко второму изображению
+%   #3 — ширина одного изображения
+%   #4 — подпись
+%   #5 — label (метка для ссылки)
+%   #6 — режим отображения: sidebyside или stacked
+% -----------------------------------------------------------------------------
+\newcommand{\insertfigurescustom}[6]{%
+  \begin{figure}[H]
+    \centering
+    \ifthenelse{\equal{#6}{sidebyside}}{%
+      \includegraphics[width=#3]{#1}%
+      \hspace{1mm}%
+      \includegraphics[width=#3]{#2}%
+    }{%
+      \includegraphics[width=#3]{#1}\par\medskip
+      \includegraphics[width=#3]{#2}%
+    }
+    \captionsetup{justification=centering}
+    \caption{#4}
+    \label{fig:#5}
+  \end{figure}
+}
+
