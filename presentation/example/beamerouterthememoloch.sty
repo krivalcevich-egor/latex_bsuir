@@ -1,0 +1,140 @@
+%%
+%% This is file `beamerouterthememoloch.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% beamerouterthememoloch.dtx  (with options: `package')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from beamerouterthememoloch.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file beamerouterthememoloch.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%% ---------------------------------------------------------------------------
+%% Copyright 2024 Johan Larsson and contributors
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerouterthememoloch}[2024-03-06 v0.3.0 Moloch outer theme] % x-release-please-version
+\RequirePackage{calc}
+\RequirePackage{pgfopts}
+\pgfkeys{
+  /moloch/outer/progressbar/.cd,
+  .is choice,
+  none/.code={%
+      \setbeamertemplate{headline}[plain]
+      \setbeamertemplate{frametitle}[plain]
+      \setbeamertemplate{footline}[plain]
+    },
+  head/.code={\pgfkeys{/moloch/outer/progressbar=none}
+      \addtobeamertemplate{headline}{}{%
+        \usebeamertemplate*{progress bar in head/foot}
+      }
+    },
+  frametitle/.code={\pgfkeys{/moloch/outer/progressbar=none}
+      \addtobeamertemplate{frametitle}{}{%
+        \usebeamertemplate*{progress bar in head/foot}
+      }
+    },
+  foot/.code={\pgfkeys{/moloch/outer/progressbar=none}
+      \addtobeamertemplate{footline}{}{%
+        \usebeamertemplate*{progress bar in head/foot}%
+      }
+    },
+}
+\newcommand{\moloch@outer@setdefaults}{
+  \pgfkeys{/moloch/outer/.cd,
+    progressbar=none,
+  }
+}
+\pgfkeys{
+  /moloch/outer/numbering/.cd,
+  .is choice,
+  none/.code={%
+      \PackageWarning{moloch}{The ``numbering'' option is deprecated.
+        Use beamer's ``page number in head/foot'' template instead}%
+      \setbeamertemplate{page number in head/foot}[default]
+    },
+  counter/.code={%
+      \PackageWarning{moloch}{The ``numbering'' option is deprecated.
+        Use beamer's ``page number in head/foot'' template instead}%
+      \setbeamertemplate{page number in head/foot}[framenumber]
+    },
+  fraction/.code={%
+      \PackageWarning{moloch}{The ``numbering'' option is deprecated.
+        Use beamer's ``page number in head/foot'' template instead}%
+      \setbeamertemplate{page number in head/foot}[totalframenumber]
+    },
+}
+\setbeamertemplate{page number in head/foot}[framenumber]
+\setbeamertemplate{navigation symbols}{}
+\defbeamertemplate{headline}{plain}{}
+\defbeamertemplate{footline}{plain}{%
+  \begin{beamercolorbox}[
+      leftskip=4pt,%
+      rightskip=5pt,%
+      wd=\textwidth,%
+    ]{footline}%
+    \usebeamercolor[fg]{page number in head/foot}%
+    \usebeamerfont{page number in head/foot}%
+    \usebeamertemplate*{frame footer}%
+    \hfill%
+    \usebeamertemplate*{page number in head/foot}\vskip4pt%
+  \end{beamercolorbox}%
+}
+\defbeamertemplate{frametitle}{plain}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[%
+      wd=\paperwidth,%
+      sep=1.1ex,%
+      leftskip=0.5ex,%
+      rightskip=\the\glueexpr 0.5ex plus 1fill\relax,%
+    ]{frametitle}%
+    \usebeamerfont{frametitle}%
+    \vbox{}\vskip-0.4ex%
+    \strut\insertframetitle\nolinebreak\strut\par%
+    {%
+      \ifx\insertframesubtitle\@empty%
+        \else%
+        {\usebeamerfont{framesubtitle}\vspace{-0.8ex}\usebeamercolor[fg]{framesubtitle}\strut\insertframesubtitle\strut\par}%
+      \fi
+    }%
+  \end{beamercolorbox}%
+}
+\setbeamertemplate{frametitle continuation}{\romannumeral\insertcontinuationcount}
+\newlength{\moloch@progressinheadfoot}
+\newlength{\moloch@progressinheadfoot@linewidth}
+\setlength{\moloch@progressinheadfoot@linewidth}{0.4pt}
+\setbeamertemplate{progress bar in head/foot}{
+  \nointerlineskip
+  \pgfmathsetlength{\moloch@progressinheadfoot}{%
+    \paperwidth * min(1,\insertframenumber/\inserttotalframenumber)%
+  }
+  \begin{beamercolorbox}[wd=\paperwidth]{progress bar in head/foot}
+    \tikzexternaldisable
+    \begin{tikzpicture}
+      \fill[bg]
+      (0,0)
+      rectangle
+      (\paperwidth, \moloch@progressinheadfoot@linewidth);
+      \fill[fg]
+      (0,0)
+      rectangle
+      (\moloch@progressinheadfoot, \moloch@progressinheadfoot@linewidth);
+    \end{tikzpicture}
+    \tikzexternalenable
+  \end{beamercolorbox}
+}
+\moloch@outer@setdefaults
+\ProcessPgfPackageOptions{/moloch/outer}
+\endinput
+%%
+%% End of file `beamerouterthememoloch.sty'.

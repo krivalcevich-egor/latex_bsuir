@@ -1,0 +1,45 @@
+%%
+%% This is file `beamerthememoloch.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% beamerthememoloch.dtx  (with options: `package')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from beamerthememoloch.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file beamerthememoloch.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthememoloch}[2024-03-06 v0.3.0 Moloch Beamer theme] % x-release-please-version
+\RequirePackage{pgfopts}
+\pgfkeys{/moloch/.cd,
+  .search also={
+      /moloch/inner,
+      /moloch/outer,
+      /moloch/color,
+      /moloch/font,
+    }
+}
+\providecommand{\tikzexternalenable}{}
+\providecommand{\tikzexternaldisable}{}
+\useinnertheme{moloch}
+\useoutertheme{moloch}
+\usecolortheme{moloch}
+\usefonttheme{moloch}
+\newcommand{\molochset}[1]{\pgfkeys{/moloch/.cd,#1}}
+\newcommand{\mreducelistspacing}{\vspace{-\topsep}}
+\ProcessPgfOptions{/moloch}
+\endinput
+%%
+%% End of file `beamerthememoloch.sty'.

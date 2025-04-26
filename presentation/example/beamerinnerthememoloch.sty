@@ -1,0 +1,273 @@
+%%
+%% This is file `beamerinnerthememoloch.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% beamerinnerthememoloch.dtx  (with options: `package')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from beamerinnerthememoloch.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file beamerinnerthememoloch.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%% ---------------------------------------------------------------------------
+%% Copyright 2024 Johan Larsson and contributors
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerinnerthememoloch}[2024-03-06 v0.3.0 Moloch inner theme] % x-release-please-version
+\RequirePackage{keyval}
+\RequirePackage{calc}
+\RequirePackage{pgfopts}
+\RequirePackage{tikz}
+\pgfkeys{
+  /moloch/inner/sectionpage/.cd,
+  .is choice,
+  none/.code=\moloch@disablesectionpage,
+  simple/.code={%
+      \moloch@enablesectionpage%
+      \setbeamertemplate{section page}[simple]%
+    },
+  progressbar/.code={%
+      \moloch@enablesectionpage%
+      \setbeamertemplate{section page}[progressbar]%
+    },
+}
+\pgfkeys{
+  /moloch/inner/subsectionpage/.cd,
+  .is choice,
+  none/.code=\moloch@disablesubsectionpage,
+  simple/.code={%
+      \moloch@enablesubsectionpage%
+      \setbeamertemplate{section page}[simple]%
+    },
+  progressbar/.code={%
+      \moloch@enablesubsectionpage%
+      \setbeamertemplate{section page}[progressbar]%
+    },
+}
+\newcommand{\moloch@inner@setdefaults}{
+  \pgfkeys{/moloch/inner/.cd,
+    sectionpage=progressbar,
+    subsectionpage=none
+  }
+}
+\setbeamertemplate{title page}{
+  \begin{minipage}[b][\paperheight]{\textwidth}
+    \null%
+    \vfill%
+    \ifx\inserttitlegraphic\@empty\else\usebeamertemplate*{title graphic}\fi
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \expandafter\ifblank\expandafter{\beamer@andstripped}{}{%
+      \usebeamertemplate*{author}%
+    }
+    \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+    \ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+    \vfill
+    \null
+  \end{minipage}%
+}
+\def\maketitle{%
+  \ifbeamer@inframe
+    \titlepage
+  \else
+    \frame[plain,noframenumbering]{\titlepage}
+  \fi
+}
+\def\titlepage{%
+  \usebeamertemplate{title page}
+}
+\setbeamertemplate{title graphic}{
+  \inserttitlegraphic%
+  \par%
+  \vspace*{1em}
+}
+\setbeamertemplate{title}{
+  \raggedright%
+  \inserttitle%
+  \par%
+  \vspace*{0.2em}
+}
+\setbeamertemplate{subtitle}{
+  \vspace*{0.1em}
+  \raggedright%
+  \insertsubtitle%
+  \par%
+  \vspace*{0.2em}
+}
+\newlength{\moloch@titleseparator@linewidth}
+\setlength{\moloch@titleseparator@linewidth}{0.4pt}
+\setbeamertemplate{title separator}{
+  \tikzexternaldisable%
+  \begin{tikzpicture}
+    \fill[fg] (0,0) rectangle (\textwidth, \moloch@titleseparator@linewidth);
+  \end{tikzpicture}%
+  \tikzexternalenable%
+  \par%
+  \vspace*{0.8em}
+}
+\setbeamertemplate{author}{
+  \raggedright%
+  \insertauthor%
+  \par%
+  \vspace*{0.5em}
+}
+\setbeamertemplate{institute}{
+  \insertinstitute%
+  \par%
+  \vspace*{1em}
+}
+\setbeamertemplate{date}{
+  \insertdate%
+  \par%
+}
+\defbeamertemplate{section page}{simple}{
+  \begin{center}
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\par
+    \ifx\insertsubsectionhead\@empty\else
+      \usebeamercolor[fg]{subsection title}
+      \usebeamerfont{subsection title}
+      \insertsubsectionhead
+    \fi
+  \end{center}
+}
+\defbeamertemplate{section page}{progressbar}{
+  \centering
+  \begin{minipage}{0.7875\linewidth}
+    \raggedright
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\\[-1ex]
+    \usebeamertemplate*{progress bar in section page}
+    \par
+    \ifx\insertsubsectionhead\@empty\else%
+      \usebeamercolor[fg]{subsection title}%
+      \usebeamerfont{subsection title}%
+      \insertsubsectionhead
+    \fi
+  \end{minipage}
+  \par
+  \vspace{\baselineskip}
+}
+\newcommand{\moloch@disablesectionpage}{
+  \AtBeginSection{
+    % intentionally empty
+  }
+}
+\newcommand{\moloch@enablesectionpage}{
+  \AtBeginSection{
+    \ifbeamer@inframe
+      \sectionpage
+    \else
+      \frame[plain,c,noframenumbering]{\sectionpage}
+    \fi
+  }
+}
+\setbeamertemplate{subsection page}{%
+  \usebeamertemplate*{section page}
+}
+\newcommand{\moloch@disablesubsectionpage}{
+  \AtBeginSubsection{
+    % intentionally empty
+  }
+}
+\newcommand{\moloch@enablesubsectionpage}{
+  \AtBeginSubsection{
+    \ifbeamer@inframe
+      \subsectionpage
+    \else
+      \frame[plain,c,noframenumbering]{\subsectionpage}
+    \fi
+  }
+}
+\newlength{\moloch@progressonsectionpage}
+\newlength{\moloch@progressonsectionpage@linewidth}
+\setlength{\moloch@progressonsectionpage@linewidth}{0.4pt}
+\setbeamertemplate{progress bar in section page}{
+  \pgfmathsetlength{\moloch@progressonsectionpage}{
+    \textwidth * min(1,\insertframenumber/\inserttotalframenumber)
+  }
+  \tikzexternaldisable
+  \begin{tikzpicture}
+    \fill[bg]
+    (0,0)
+    rectangle
+    (\textwidth, \moloch@progressonsectionpage@linewidth);
+    \fill[fg]
+    (0,0)
+    rectangle
+    (\moloch@progressonsectionpage, \moloch@progressonsectionpage@linewidth);
+  \end{tikzpicture}
+  \tikzexternalenable
+}
+\def\inserttotalframenumber{100}
+\setbeamertemplate{itemize item}{\(\bullet\)}
+\setbeamertemplate{itemize subitem}{\(\circ\)}
+\setbeamertemplate{itemize subsubitem}{\textbullet}
+\setbeamertemplate{caption label separator}{: }
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{footnote}{%
+  \parindent 0em\noindent%
+  \raggedright
+  \usebeamercolor{footnote}%
+  \hbox to 0.8em{\hfil\insertfootnotemark}%
+  \insertfootnotetext\par%
+}
+\define@key{beamerframe}{c}[true]{% centered
+  \beamer@frametopskip=0pt plus 1fill\relax%
+  \beamer@framebottomskip=0pt plus 1fill\relax%
+  \beamer@frametopskipautobreak=0pt plus .4\paperheight\relax%
+  \beamer@framebottomskipautobreak=0pt plus .6\paperheight\relax%
+  \def\beamer@initfirstlineunskip{}%
+}
+\providebool{moloch@standout}
+\define@key{beamerframe}{standout}[true]{%
+  \booltrue{moloch@standout}
+  \begingroup
+  \setkeys{beamerframe}{c}
+  \setkeys{beamerframe}{noframenumbering}
+  \ifbeamercolorempty[bg]{palette primary}{
+    \setbeamercolor{background canvas}{
+      use=palette primary,
+      bg=-palette primary.fg
+    }
+  }{
+    \setbeamercolor{background canvas}{
+      use=palette primary,
+      bg=palette primary.bg
+    }
+  }
+  \setbeamercolor{local structure}{
+    fg=palette primary.fg
+  }
+  \usebeamercolor[fg]{palette primary}
+}
+\pretocmd{\beamer@reseteecodes}{%
+  \ifbool{moloch@standout}{
+    \endgroup
+    \boolfalse{moloch@standout}
+  }{}
+}{}{}
+\AtBeginEnvironment{beamer@frameslide}{
+  \ifbool{moloch@standout}{
+    \centering
+    \usebeamerfont{standout}
+  }{}
+}
+\moloch@inner@setdefaults
+\ProcessPgfPackageOptions{/moloch/inner}
+\endinput
+%%
+%% End of file `beamerinnerthememoloch.sty'.

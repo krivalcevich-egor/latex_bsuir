@@ -1,0 +1,146 @@
+%%
+%% This is file `beamercolorthememoloch.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% beamercolorthememoloch.dtx  (with options: `package')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from beamercolorthememoloch.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file beamercolorthememoloch.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%% ---------------------------------------------------------------------------
+%% Copyright 2024 Johan Larsson and contributors
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthememoloch}[2024-03-06 v0.3.0 Moloch color theme] % x-release-please-version
+\RequirePackage{pgfopts}
+\pgfkeys{
+  /moloch/color/block/.cd,
+  .is choice,
+  transparent/.code=\moloch@block@transparent,
+  fill/.code=\moloch@block@fill,
+}
+\pgfkeys{
+  /moloch/color/background/.cd,
+  .is choice,
+  dark/.code=\moloch@colors@dark,
+  light/.code=\moloch@colors@light,
+}
+\newcommand{\moloch@color@setdefaults}{
+  \pgfkeys{/moloch/color/.cd,
+    background=light,
+  }
+}
+\definecolor{mDarkBrown}{HTML}{604c38}
+\definecolor{mDarkTeal}{HTML}{23373b}
+\definecolor{mLightBrown}{HTML}{EB811B}
+\definecolor{mLightGreen}{RGB}{0,128,128}
+\newcommand{\moloch@colors@dark}{
+  \setbeamercolor{normal text}{%
+    fg=black!2,
+    bg=mDarkTeal
+  }
+  \usebeamercolor[fg]{normal text}
+}
+\newcommand{\moloch@colors@light}{
+  \setbeamercolor{normal text}{%
+    fg=mDarkTeal,
+    bg=black!2
+  }
+}
+\setbeamercolor{alerted text}{%
+  fg=mLightBrown
+}
+\setbeamercolor{example text}{%
+  fg=mLightGreen
+}
+\setbeamercolor{titlelike}{use=normal text, parent=normal text}
+\setbeamercolor{author}{use=normal text, parent=normal text}
+\setbeamercolor{date}{use=normal text, parent=normal text}
+\setbeamercolor{institute}{use=normal text, fg=normal text.fg!80!normal text.bg}
+\setbeamercolor{structure}{use=normal text, fg=normal text.fg}
+\setbeamercolor{palette primary}{%
+  use=normal text,
+  fg=normal text.bg,
+  bg=normal text.fg
+}
+\setbeamercolor{frametitle}{%
+  use=palette primary,
+  parent=palette primary
+}
+\setbeamercolor{progress bar}{%
+  use=alerted text,
+  fg=alerted text.fg,
+  bg=alerted text.fg!50!black!30
+}
+\setbeamercolor{title separator}{
+  use=progress bar,
+  parent=progress bar
+}
+\setbeamercolor{progress bar in head/foot}{%
+  use=progress bar,
+  parent=progress bar
+}
+\setbeamercolor{progress bar in section page}{
+  use=progress bar,
+  parent=progress bar
+}
+\newcommand{\moloch@block@transparent}{
+  \setbeamercolor{block title}{bg=}
+  \setbeamercolor{block body}{bg=}
+  \setbeamercolor{block title alerted}{bg=}
+  \setbeamercolor{block title example}{bg=}
+}
+\newcommand{\moloch@block@fill}{
+  \setbeamercolor{block title}{%
+    bg=normal text.bg!80!fg
+  }
+  \setbeamercolor{block body}{%
+    bg=block title.bg!50!normal text.bg
+  }
+  \setbeamercolor{block title alerted}{%
+    bg=block title.bg,
+  }
+  \setbeamercolor{block title example}{%
+    bg=block title.bg,
+  }
+}
+\setbeamercolor{block title}{%
+  use=normal text,
+  fg=normal text.fg
+}
+\setbeamercolor{block title alerted}{%
+  use={block title, alerted text},
+  fg=alerted text.fg
+}
+\setbeamercolor{block title example}{%
+  use={block title, example text},
+  fg=example text.fg
+}
+\setbeamercolor{block body alerted}{use=block body, parent=block body}
+\setbeamercolor{block body example}{use=block body, parent=block body}
+\setbeamercolor{footnote}{fg=normal text.fg!90}
+\setbeamercolor{footnote mark}{fg=.}
+\setbeamercolor{footnote}{fg=normal text.fg!90}
+\setbeamercolor{footnote mark}{fg=.}
+\setbeamercolor{bibliography entry author}{fg=, bg=}
+\setbeamercolor{bibliography entry title}{fg=, bg=}
+\setbeamercolor{bibliography entry location}{fg=, bg=}
+\setbeamercolor{bibliography entry note}{fg=, bg=}
+\moloch@color@setdefaults
+\ProcessPgfPackageOptions{/moloch/color}
+\mode<all>
+\endinput
+%%
+%% End of file `beamercolorthememoloch.sty'.

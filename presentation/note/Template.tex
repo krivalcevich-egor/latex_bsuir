@@ -1,0 +1,153 @@
+%===============================================================================
+% !TeX encoding = UTF-8
+% !TeX spellcheck = ru_RU-Russian
+% !TEX TS-program = latexmk
+\documentclass[12pt,compress,aspectratio=169]{beamer}
+%\documentclass[12pt,compress]{beamer}
+%===============================================================================
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{nicefrac}
+\usepackage{siunitx}
+\usepackage{blindtext}
+
+\graphicspath{{./pdf/}{./png/}{../Figures/}{./pics/}}
+\usepackage[inkscapelatex=false]{svg}
+\svgpath{{svg/}{../Figures/}}
+
+% \usetheme{moloch}
+% \usetheme{metropolis}
+\usefonttheme[onlymath]{serif}
+
+\usepackage{FiraSans}
+
+% \usepackage[russian,english]{babel}
+\usepackage[english,main=russian]{babel}  % https://tex.stackexchange.com/questions/86078/strange-latex-compilation-errors-triggered-by-the-number-of-lines-on-the-page
+
+%\usepackage[]{plex-sans}
+% \usetheme[progressbar=frametitle]{metropolis}
+%\usetheme[progressbar=frametitle]{moloch}
+\usetheme{moloch}
+% 
+
+% \setsansfont[ItalicFont={Fira Sans Light Italic},%
+%                  BoldFont={Fira Sans SemiBold},%
+%                  BoldItalicFont={Fira Sans Italic}]%
+%                 {Fira Sans Light}%
+
+\usepackage{appendixnumberbeamer}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+% \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\usepackage{fancyvrb}
+\usepackage{minted}
+% \usepackage{enumerate}
+%\usepackage{metropolisbsuir} % Don't forget to load this!
+% \usepackage{molochbsuir} % Don't forget to load this!
+% \usepackage{tikz}
+
+\usepackage[style=verbose,backend=biber]{biblatex}
+\addbibresource{my_ref.bib}
+
+%===============================================================================
+%===============================================================================
+%\setbeamersize{text margin left=5pt,text margin right=5pt}
+%===============================================================================
+%\usecolortheme{seahorse}
+
+%\makeatletter
+%\setlength{\metropolis@titleseparator@linewidth}{1pt}
+%\setlength{\metropolis@progressonsectionpage@linewidth}{4pt}
+%\setlength{\metropolis@progressinheadfoot@linewidth}{1pt}
+%\makeatother
+
+%\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\makeatletter
+\setbeamertemplate{title page}{
+  \begin{minipage}[b]{\textwidth}
+    \vfill%
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+    %\vspace{0.5cm} 
+  \end{minipage}
+  \vfil
+  \begin{minipage}[t]{.58\textwidth}
+    \vfill%
+    \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+  \end{minipage}
+  %\hfill
+  \begin{minipage}[t]{.38\textwidth}
+    \vfill
+    \ifx\inserttitlegraphic\@empty\else\inserttitlegraphic\fi
+  \end{minipage}
+  \vfil
+  \vspace{10pt}
+  \ifx\insertdate\@empty\else\usebeamertemplate{date}\fi
+}
+\makeatother
+
+\title{%
+Тема презентации 
+}%
+%\subtitle{ }
+\date{ \tiny 23 апреля, 2025}
+\author{{\bfseries Е.А. Кривальцевич}	\and М.И. Вашкевич \\ \texttt{ \footnotesize krivalcevi4.egor@gmail.com,\,\, vashkevich@bsuir.by}}
+\institute{
+  Белорусский государственный университет\\
+  информатики и радиоэлектроники \\
+  Кафедра электронных вычислительных средств \\
+  \\
+  \\
+  XIV Международная научная конференции \\
+  «Информационные технологии и системы»\\
+  Минск, Республика Беларусь
+}
+\titlegraphic{
+    \includegraphics[height=1.3cm]{bsuir-logo.pdf} \\ \vspace{5pt} \\
+    % \includegraphics[height=1.3cm]{its_logo.jpg}
+}
+
+\newcommand{\diag}[1]{	\operatorname{diag} \left( {#1} \right)	}
+\newcommand{\ndiag}[1]{	\operatorname{diag} \left\lbrace {#1} \right\rbrace}
+\newcommand{\bdiag}[1]{	\operatorname{diag} \left[ {#1} \right]}
+\newcommand{\mtinyidx}[1]{	\textsc{\tiny \textit{#1}}}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\db}[1]{\SI{#1}{\decibel}}
+\newcommand{\dbn}[1]{\SI{#1}{}}
+\setbeamersize{text margin left=5pt,text margin right=5pt}
+
+\begin{document}
+
+\maketitle
+%------------------------------------------------------------------------------------------
+\input{slides/00_content_outline}
+
+\section{Введение}
+\input{slides/01_intro}
+\section{ТЕМА 1}
+\input{slides/02_item_1}
+\section{ТЕМА 2}
+\input{slides/03_item_2}
+\section{ТЕМА 3}
+\input{slides/04_item_3}
+\section{ТЕМА 4}
+\input{slides/05_item_4} 
+
+%------------------------------------------------------------------------------------------
+
+%===============================================================================
+\end{document}

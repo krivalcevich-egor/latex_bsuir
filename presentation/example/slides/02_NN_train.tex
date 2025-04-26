@@ -1,0 +1,78 @@
+%===============================================================================
+\begin{frame}
+\frametitle{Двумерное обучаемое разделимое преобразование (LST – learnable 2D separable transform)}
+
+\begin{itemize}
+    \item \textbf{Двумерные разделимые преобразования} применяются в обработке изображений для снижения вычислительной сложности при пространственной фильтрации. Ядро преобразования имеет вид:
+  \[
+  \mathbf{W} = \mathbf{v} \times \mathbf{h}^{T},
+  \]
+  где $\mathbf{W} \in \mathbb{R}^{n \times n}$, $\mathbf{v}, \mathbf{h} \in \mathbb{R}^{n \times 1}$.
+  
+    \item Разделимое преобразование $\mathbf{W}$ имеет $2n$ независимых параметров, вместо $n^2$ параметров, которые имеет обычное преобразование.
+    
+    \item Пример разделимого преобразования – фильтр Собеля:
+  \[
+  \begin{bmatrix}
+  1 & 2 & 1 \\
+  0 & 0 & 0 \\
+  -1 & -2 & -1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  1 \\
+  0 \\
+  -1
+  \end{bmatrix}
+  \times
+  \begin{bmatrix}
+  1 & 2 & 1
+  \end{bmatrix}.
+  \]
+  \end{itemize}
+\end{frame}
+%===============================================================================
+\begin{frame}[t]
+    \frametitle{Двумерное обучаемое разделимое преобразование (LST – learnable 2D separable transform)}
+    \begin{itemize}
+        
+        \item Преобразование \texttt{LST\textsubscript{2D}} обрабатывает изображение $\mathbf{X}$ размера $d_{in} \times d_{in}$, при этом на выходе получается изображение $\mathbf{Y}$ размера $d_{out} \times d_{out}$:
+      \[
+      \mathbf{Y} = \texttt{LST}_{d_{in} \times d_{out}}(\mathbf{X}) = \tanh(\mathbf{W}_2 \tanh(\mathbf{W}_1 \mathbf{X}^{T})),
+      \]
+      где $\mathbf{W}_1$, $\mathbf{W}_2$ — матрицы весов слоёв FC1 и FC2, соответственно, а $d_{in}$ и $d_{out}$ — это гиперпараметры преобразования, определяющие общее число обучаемых параметров
+      \[
+      N_{\text{params}} = 2 \cdot (d_{in} + 1) \cdot d_{out}.
+      \]
+      
+    \end{itemize}
+    
+\end{frame}
+%===============================================================================
+\begin{frame}[t]
+    \begin{block}{\centering}
+        \centering
+        \includegraphics[width = 0.9\textwidth]{pics/LST2D.png} 
+        % \includesvg[height = 0.5\textheight]{RGB_multidim_data.svg}        
+    \end{block}
+\end{frame}
+%===============================================================================
+\begin{frame}[t]
+    \frametitle{Нейронная сеть LST-1}
+    \begin{block}{\centering}
+        \vspace{1mm}
+        \centering
+        \includegraphics[width = 0.9\textheight]{LST.png}        
+    \end{block}
+
+    \begin{itemize}
+        \item \texttt{LST\textsubscript{2D}} можно рассматривать, как базовый блок для построения компактных нейронных сетей для распознавания изображений
+        \item Нейронная сеть LST-1 – простейший вариант нейронной сети, использующий блок LST2D.
+        \item Число параметров LST-1 ${d}_{in} = {d}_{out} = 28$:
+        \[
+        N_{\text{params}} = 2 \cdot (d_{in} + 1) \cdot d_{out} + (d^2_{out}+1)\cdot 10 = 9474.
+        \]
+    \end{itemize}
+\end{frame}
+
+
