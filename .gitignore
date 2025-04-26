@@ -38,6 +38,7 @@ project.log
 *.nav
 *.snm
 *.vrb
+*.xml
 
 # Папки с двоичными исходниками (например, AutoCAD)
 Autocad/*.bak
