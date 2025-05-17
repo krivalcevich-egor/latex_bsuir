@@ -89,7 +89,7 @@
   {\hspace{12.5mm}\thesubsection}
   {2mm}
   {}
-\titlespacing*{\subsection}{12.5mm}{1\baselineskip}{1\baselineskip}
+\titlespacing*{\subsection}{12.5mm}{1\baselineskip}{0\baselineskip}
 
 % Оформление заголовков с номером и без в содержании
 \titlecontents{chapter}[0em]
@@ -118,15 +118,36 @@
 \tolerance=10000                         % Максимальная терпимость к разрывам
 \pretocmd{\tableofcontents}{\sloppy}{}{} % Применение \sloppy к оглавлению
 
-% ---------------------------------------------
+% -----------------------------------------------------------------------------
 % Настройка отображения листингов кода
-% ---------------------------------------------
+% -----------------------------------------------------------------------------
 \lstset{
     basicstyle=\ttfamily\fontsize{12}{12}\selectfont,                % Шрифт и размер
-    commentstyle=\ttfamily\fontsize{12}{12}\selectfont\color{green}, % Комментарии — зелёные
+    commentstyle=\ttfamily\fontsize{12}{12}\selectfont\color{gray},  % Комментарии — серый
     xleftmargin=1em,                                                 % Отступ слева
     language=python,                                                 % Язык по умолчанию — Python
     breaklines=true,                                                 % Перенос строк
+}
+
+% -----------------------------------------------------------------------------
+% Уменьшаем/нормализуем отступы перед и после формул
+% -----------------------------------------------------------------------------
+% \makeatletter
+% \renewcommand{\@setfontsize}[3]{\fontsize{#2}{#2}\selectfont}
+% \makeatother
+
+% % -----------------------------------------------------------------------------
+% % Установка одинакового вертикального отступа перед и после формул
+% % -----------------------------------------------------------------------------
+% \setlength{\abovedisplayskip}{0\baselineskip}
+% \setlength{\belowdisplayskip}{0\baselineskip}
+% \setlength{\abovedisplayshortskip}{0\baselineskip}
+% \setlength{\belowdisplayshortskip}{0\baselineskip}
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{1\baselineskip}%
+  \setlength{\belowdisplayskip}{1\baselineskip}%
+  \setlength{\abovedisplayshortskip}{0\baselineskip}%
+  \setlength{\belowdisplayshortskip}{1\baselineskip}%
 }
 
 % ---------------------------------------
@@ -148,6 +169,7 @@
   \begin{figure}[H]
     \centering
     \includegraphics[width=#4]{#2}
+    \vspace{0.5\baselineskip}
     \caption{#3}
     \label{fig:#1}
   \end{figure}
@@ -171,12 +193,26 @@
       \hspace{1mm}%
       \includegraphics[width=#3]{#2}%
     }{%
-      \includegraphics[width=#3]{#1}\par\medskip
+      \includegraphics[width=#3]{#1}\par
       \includegraphics[width=#3]{#2}%
     }
     \captionsetup{justification=centering}
+    \vspace{0.5\baselineskip}
     \caption{#4}
     \label{fig:#5}
   \end{figure}
 }
 
+% -----------------------------------------------------------------------------
+% 
+% 
+% -----------------------------------------------------------------------------
+\newcommand{\anonsection}[1]{
+  \begingroup
+  \ifdim\lastskip<1em % если предыдущий вертикальный отступ маленький
+    \vspace{1\baselineskip}%
+  \fi
+  \endgroup
+  \refstepcounter{subsection}
+  \textbf{\thesubsection\hspace{2mm}#1}%
+}
