@@ -1,4 +1,3 @@
-
 (* dont_touch = "yes" *) (* keep_hierarchy = "yes" *) 
 
 module fc 
@@ -9,11 +8,10 @@ module fc
     input  logic                         start_i,
     input  logic [         ADDR_OUT-1:0] x_i,
     input  logic [INT_BITS+FRC_BITS-1:0] din_i,
-    output logic [         INT_BITS-1:0] num_o,
+    output logic [INT_BITS+FRC_BITS-1:0] num_o,
     output logic                         rdy_o
   );
 
-logic [INT_BITS + FRC_BITS-1:0] memory         [PICT_SIZE-1:0][PICT_SIZE-1:0];
 logic [INT_BITS + FRC_BITS-1:0] internal_rc    [PICT_SIZE-1:0];
 logic [INT_BITS + FRC_BITS-1:0] internal_tanh  [PICT_SIZE-1:0];
 logic [INT_BITS + FRC_BITS-1:0] result         [ ADDR_OUT-1:0];
@@ -23,16 +21,17 @@ logic init;
 logic en;
 logic mem_en;
 logic tg_en;
+logic ld_mem_en;
 
 (* dont_touch = "yes" *) logic [ ADDR_RC-1:0] fc_addr;
 (* dont_touch = "yes" *) logic [ ADDR_RC-1:0] str_cnt;
 (* dont_touch = "yes" *) logic [RCO_TYPE-1:0] rco_sel;      // selects row, column or w_out memory bloc
 logic [INT_BITS + FRC_BITS-1:0] tang;
-
 logic [INT_BITS + FRC_BITS-1:0] din;
 logic [INT_BITS + FRC_BITS-1:0] dout;
 logic we;
 logic m_en;
+logic addr_en;
 (* dont_touch = "yes" *) logic [ADDR_OUT-1:0] addr;
 
   img_mem img_mem_inst(
@@ -44,26 +43,30 @@ logic m_en;
     .dout(dout)
   );
   
-assign we = (sel_data)? 1 :
-          | (tg_en & rco_sel  == 0)? 1 :
-          | (tg_en & rco_sel  == 1)? 1 : 0
-          ;
-assign addr = ( sel_data)? x_i : 
-            | (!sel_data & tg_en  & rco_sel == 0)? PICT_SIZE*str_cnt + fc_addr :
-            | (!sel_data & !tg_en & rco_sel == 0)? PICT_SIZE*str_cnt + fc_addr-1 :
-            | (!sel_data & tg_en  & rco_sel == 1)? PICT_SIZE*fc_addr + str_cnt :
-            | (!sel_data & !tg_en & rco_sel == 1)? PICT_SIZE*(fc_addr-1) + str_cnt : 
-            | (!sel_data & !tg_en & rco_sel == 2)? PICT_SIZE*str_cnt + fc_addr : 0
-            ;
+always_ff @( posedge clk ) begin
+  if(!sel_data & rco_sel == 1 & addr_en) begin
+    addr <= PICT_SIZE*fc_addr + str_cnt; 
+  end else if(!sel_data & addr_en) begin
+    addr <= PICT_SIZE*str_cnt + fc_addr;
+  end else begin
+    addr <= x_i;
+  end
+end
 
-assign din  = (sel_data)? din_i : 
-            | (tg_en & rco_sel== 0)? tang : 
-            | (tg_en & rco_sel== 1)? tang : 0
-            ;
+logic [INT_BITS + FRC_BITS-1:0] data2mem;
+
+assign din = (sel_data)? data2mem :
+           | (tg_en & rco_sel== 0)? tang :
+           | (tg_en & rco_sel== 1)? tang :
+           0;
+
+always_ff @( posedge clk ) begin
+  data2mem <= din_i;
+end
+
 
 (* dont_touch = "yes" *) logic [ADDR_OUT-1:0]   out_addr;
 logic [INT_BITS + FRC_BITS-1:0] data2PE;
-assign data2PE = dout;
 
 genvar i, j;
 generate
@@ -76,7 +79,7 @@ generate
             .address_col(fc_addr[ADDR_RC-1:0]),
             .address_o(out_addr),
             .rco_sel(rco_sel),
-            .din(data2PE),
+            .din(dout),
             .dout(internal_rc[i]));
         end
 endgenerate
@@ -89,7 +92,7 @@ generate
         .en(en), 
         .address_row(fc_addr[ADDR_RC-1:0]),
         .address_col(fc_addr[ADDR_RC-1:0]),
-        .din(data2PE),
+        .din(dout),
         .dout(internal_rc[j+10]), 
         .rc_sel(rco_sel[0]));
     end 
@@ -98,14 +101,16 @@ endgenerate
 logic [INT_BITS + FRC_BITS-1:0] data_tg;
 
 always_comb begin
-  data_tg = internal_tanh[fc_addr];
+  if(fc_addr != PICT_SIZE) begin
+    data_tg = internal_tanh[fc_addr];
+  end
 end
 
-tanh_function #(.INT_SIZE(INT_BITS), .FRC_SIZE(FRC_BITS)) tanh_inst(.X(data_tg), .Y(tang));
+tanh_function #(.INT_SIZE(INT_BITS), .FRC_SIZE(FRC_BITS)) tanh_inst(.clk(clk), .X(data_tg), .Y(tang));
 
-always_comb begin
+always_ff @( posedge clk ) begin
   if(mem_en) begin
-    internal_tanh = internal_rc; 
+    internal_tanh <= internal_rc; 
   end
 end
 
@@ -132,8 +137,6 @@ end
 assign out_addr_next = out_addr + ADDR_OUT'(1);
 
 // -------------------------------------------------------
-// CNT
-// -------------------------------------------------------
 logic fc_en;
 logic [ADDR_RC-1:0] fc_addr_next;
 
@@ -149,8 +152,6 @@ end
 
 assign fc_addr_next = fc_addr + ADDR_RC'(1);
 
-// -------------------------------------------------------
-// CNT
 // -------------------------------------------------------
 logic str_en;
 logic rst_str_cnt;
@@ -175,19 +176,24 @@ assign str_cnt_next = str_cnt + ADDR_RC'(1);
 // -------------------------------------------------------
 // FSM
 // -------------------------------------------------------
-
 typedef enum logic [NN_FSM_BUS_WIDTH-1:0] {
-  NN_INIT             = NN_FSM_BUS_WIDTH'('b00000),
-  NN_LOAD_IMG         = NN_FSM_BUS_WIDTH'('b10000),
-  NN_LD_MEM           = NN_FSM_BUS_WIDTH'('b10001),
-  NN_INIT_CALC        = NN_FSM_BUS_WIDTH'('b10011),
-  NN_STRING_CALC      = NN_FSM_BUS_WIDTH'('b10010),
-  NN_STRING_RDY       = NN_FSM_BUS_WIDTH'('b10110),
-  NN_TANG_STRING_CALC = NN_FSM_BUS_WIDTH'('b10111),
-  NN_UPD_RCO_TYPE     = NN_FSM_BUS_WIDTH'('b10101),
-  NN_INIT_OUT         = NN_FSM_BUS_WIDTH'('b11101),
-  NN_OUT_CALC         = NN_FSM_BUS_WIDTH'('b11111),
-  NN_OUT_RDY          = NN_FSM_BUS_WIDTH'('b11110)
+  NN_INIT             = NN_FSM_BUS_WIDTH'('b000000),
+  NN_LOAD_IMG         = NN_FSM_BUS_WIDTH'('b100000),
+  NN_LD_MEM           = NN_FSM_BUS_WIDTH'('b100010),
+  NN_INIT_CALC_SYNC   = NN_FSM_BUS_WIDTH'('b100110),
+  NN_INIT_SYNC        = NN_FSM_BUS_WIDTH'('b101110),
+  NN_INIT_CALC        = NN_FSM_BUS_WIDTH'('b101100),
+  NN_STRING_CALC      = NN_FSM_BUS_WIDTH'('b111100),
+  NN_STRING_SYNC      = NN_FSM_BUS_WIDTH'('b111110),
+  NN_STRING_RDY       = NN_FSM_BUS_WIDTH'('b110110),
+  NN_STRING_RDY_SYNC  = NN_FSM_BUS_WIDTH'('b110010),
+  NN_TANG_STRING_CALC = NN_FSM_BUS_WIDTH'('b110000),
+  NN_UPD_RCO_TYPE     = NN_FSM_BUS_WIDTH'('b111000),
+  NN_UPD_RCO_SYNC     = NN_FSM_BUS_WIDTH'('b111010),
+  NN_INIT_OUT_SYNC    = NN_FSM_BUS_WIDTH'('b101010),
+  NN_INIT_OUT         = NN_FSM_BUS_WIDTH'('b101011),
+  NN_OUT_CALC         = NN_FSM_BUS_WIDTH'('b100011),
+  NN_OUT_RDY          = NN_FSM_BUS_WIDTH'('b100111)
 } nn_fc_state_t;
 
 nn_fc_state_t fsm_state_ff, fsm_state_next;
@@ -204,6 +210,7 @@ logic fsm_init_tr;
 logic fsm_load_img_tr;
 logic fsm_ld_mem_tr;
 logic fsm_init_calc_tr;
+logic fsm_init_calc_sync_tr;
 logic fsm_str_calc_tr;
 logic fsm_str_rdy_tr;
 logic fsm_tang_str_calc_tr;
@@ -211,18 +218,27 @@ logic fsm_upd_rco_type_tr;
 logic fsm_init_out_tr;
 logic fsm_out_calc_tr;
 logic fsm_out_rdy_tr;
+logic fsm_str_sync_tr;
+logic fsm_init_out_sync_tr;
+logic fsm_str_rdy_sync_tr;
+logic fsm_upd_rco_sync_tr;
 
 assign fsm_state_next  = (fsm_init_tr          ) ? NN_INIT             :
-                         (fsm_load_img_tr      ) ? NN_LOAD_IMG         :
-                         (fsm_ld_mem_tr        ) ? NN_LD_MEM           :
-                         (fsm_init_calc_tr     ) ? NN_INIT_CALC        :
-                         (fsm_str_calc_tr      ) ? NN_STRING_CALC      :
-                         (fsm_str_rdy_tr       ) ? NN_STRING_RDY       :
-                         (fsm_tang_str_calc_tr ) ? NN_TANG_STRING_CALC :
-                         (fsm_upd_rco_type_tr  ) ? NN_UPD_RCO_TYPE     :
-                         (fsm_init_out_tr      ) ? NN_INIT_OUT         :
-                         (fsm_out_calc_tr      ) ? NN_OUT_CALC         :
-                         (fsm_out_rdy_tr       ) ? NN_OUT_RDY          : fsm_state_ff;
+      (fsm_load_img_tr      ) ? NN_LOAD_IMG         :
+      (fsm_ld_mem_tr        ) ? NN_LD_MEM           :
+      (fsm_init_calc_sync_tr) ? NN_INIT_CALC_SYNC   :
+      (fsm_init_calc_tr     ) ? NN_INIT_CALC        :
+      (fsm_str_calc_tr      ) ? NN_STRING_CALC      :
+      (fsm_str_sync_tr      ) ? NN_STRING_SYNC      :
+      (fsm_str_rdy_tr       ) ? NN_STRING_RDY       :
+      (fsm_str_rdy_sync_tr  ) ? NN_STRING_RDY_SYNC  :
+      (fsm_tang_str_calc_tr ) ? NN_TANG_STRING_CALC :
+      (fsm_upd_rco_type_tr  ) ? NN_UPD_RCO_TYPE     :
+      (fsm_upd_rco_sync_tr  ) ? NN_UPD_RCO_SYNC     :
+      (fsm_init_out_sync_tr ) ? NN_INIT_OUT_SYNC    :
+      (fsm_init_out_tr      ) ? NN_INIT_OUT         :
+      (fsm_out_calc_tr      ) ? NN_OUT_CALC         :
+      (fsm_out_rdy_tr       ) ? NN_OUT_RDY          : fsm_state_ff;
 
 assign rdy_o = (fsm_state_ff == NN_OUT_RDY          );
 
@@ -230,58 +246,80 @@ assign rdy_o = (fsm_state_ff == NN_OUT_RDY          );
 logic col_en;
 logic rdy_en;
 logic str_tg_en;   
-
 logic rc_done;
 
-assign fsm_init_tr          = (fsm_state_ff == NN_INIT             ) & ~start_i
-                            | (fsm_state_ff == NN_OUT_RDY          );
-
-assign fsm_load_img_tr      = (fsm_state_ff == NN_INIT             ) & start_i; 
-assign fsm_ld_mem_tr        = (fsm_state_ff == NN_LOAD_IMG         ) & (x_i == WIDTH-1) 
-                            | (fsm_state_ff == NN_TANG_STRING_CALC ) & (fc_addr == PICT_SIZE-1) 
-                            | (fsm_state_ff == NN_UPD_RCO_TYPE     ) & (rco_sel != 2)
-                            ;
-assign fsm_init_calc_tr     = (fsm_state_ff == NN_LD_MEM           );
-assign fsm_str_calc_tr      = (fsm_state_ff == NN_INIT_CALC        ) & (str_cnt != PICT_SIZE);
-assign fsm_str_rdy_tr       = (fsm_state_ff == NN_STRING_CALC      ) & (fc_addr == PICT_SIZE);
-assign fsm_tang_str_calc_tr = (fsm_state_ff == NN_STRING_RDY       ) ;
-assign fsm_upd_rco_type_tr  = (fsm_state_ff == NN_INIT_CALC        ) & col_en;
-assign fsm_init_out_tr      = (fsm_state_ff == NN_UPD_RCO_TYPE     ) & (rco_sel == 2);
-assign fsm_out_calc_tr      = (fsm_state_ff == NN_INIT_OUT         );
-assign fsm_out_rdy_tr       = (fsm_state_ff == NN_OUT_CALC         ) & rdy_en;
+assign fsm_init_calc_sync_tr = (fsm_state_ff == NN_INIT_CALC       ) & (str_cnt != PICT_SIZE);
+assign fsm_upd_rco_sync_tr   = (fsm_state_ff == NN_UPD_RCO_TYPE    ) & (rco_sel != 2);
+assign fsm_init_tr           = (fsm_state_ff == NN_INIT            ) & ~start_i
+                             | (fsm_state_ff == NN_OUT_RDY         )
+                             ;
+assign fsm_load_img_tr       = (fsm_state_ff == NN_INIT             ) & start_i;
+assign fsm_ld_mem_tr         = (fsm_state_ff == NN_LOAD_IMG         ) & (x_i == WIDTH-1) 
+                             | (fsm_state_ff == NN_TANG_STRING_CALC ) & (fc_addr == PICT_SIZE-1) 
+                             ;
+assign fsm_init_calc_tr      = (fsm_state_ff == NN_LD_MEM           ) & (str_cnt != PICT_SIZE) 
+                             | (fsm_state_ff == NN_UPD_RCO_SYNC     )
+                             ;
+assign fsm_str_calc_tr       = (fsm_state_ff == NN_INIT_CALC_SYNC   ) ;
+assign fsm_str_sync_tr       = (fsm_state_ff == NN_STRING_CALC      ) & (fc_addr == PICT_SIZE);
+assign fsm_str_rdy_tr        = (fsm_state_ff == NN_STRING_SYNC      ) ;
+assign fsm_str_rdy_sync_tr   = (fsm_state_ff == NN_STRING_RDY       ) ;
+assign fsm_tang_str_calc_tr  = (fsm_state_ff == NN_STRING_RDY_SYNC  ) ;
+assign fsm_upd_rco_type_tr   = (fsm_state_ff == NN_LD_MEM           ) & (fc_addr == PICT_SIZE)  & (str_cnt == PICT_SIZE);
+assign fsm_init_out_sync_tr  = (fsm_state_ff == NN_UPD_RCO_TYPE     ) & (rco_sel == 2);
+assign fsm_init_out_tr       = (fsm_state_ff == NN_INIT_OUT_SYNC    ) ;
+assign fsm_out_calc_tr       = (fsm_state_ff == NN_INIT_OUT         ) ;
+assign fsm_out_rdy_tr        = (fsm_state_ff == NN_OUT_CALC         ) & rdy_en;
 
 // -------------------------------------------------------
-
 assign m_en = (fsm_state_ff == NN_LOAD_IMG         ) 
+            | (fsm_state_ff == NN_INIT_CALC_SYNC   ) 
             | (fsm_state_ff == NN_STRING_CALC      ) 
             | (fsm_state_ff == NN_TANG_STRING_CALC )
-            | (fsm_state_ff == NN_OUT_CALC   )
-            | (fsm_state_ff == NN_INIT) & start_i;
+            | (fsm_state_ff == NN_INIT_OUT         )
+            | (fsm_state_ff == NN_LD_MEM           )
+            | (fsm_state_ff == NN_OUT_CALC         ) & (out_addr != WIDTH+2)
+            | (fsm_state_ff == NN_INIT             ) & start_i;
 
+assign we = (sel_data)? 1 :
+          | (tg_en     & rco_sel  == 0)? 1 :
+          | (ld_mem_en & rco_sel  == 0 & str_cnt != 0)? 1 :
+          | (tg_en     & rco_sel  == 1)? 1 : 0
+          | (ld_mem_en & rco_sel  == 1 & str_cnt != 0)? 1 : 0
+          ;
+          
 // -------------------------------------------------------
-assign rdy_en      = (out_addr == WIDTH+1);
+assign rdy_en      = (out_addr == WIDTH+2);
 assign rst_str_cnt = fsm_upd_rco_type_tr;
-assign tg_en     = (fsm_state_ff == NN_TANG_STRING_CALC );
+assign tg_en     = (fsm_state_ff == NN_TANG_STRING_CALC ) | (fsm_state_ff == NN_LD_MEM) | (fsm_state_ff == NN_INIT);
+assign ld_mem_en     = (fsm_state_ff == NN_LD_MEM        ) ;
 assign rc_done   = (fc_addr == PICT_SIZE);
-assign mem_en    = (fsm_state_ff == NN_STRING_RDY       );
+assign mem_en    = (fsm_state_ff == NN_STRING_RDY       )
+                 | (fsm_state_ff == NN_INIT             );
 assign str_en    = (fsm_state_ff == NN_TANG_STRING_CALC ) & (fc_addr == PICT_SIZE-1)
                  | (fsm_state_ff == NN_OUT_CALC         ) & (fc_addr == PICT_SIZE-1);
-assign fc_en     = (fsm_state_ff == NN_INIT_CALC        ) 
+assign fc_en     = (fsm_state_ff == NN_INIT_CALC        ) & (fc_addr != PICT_SIZE) 
+                 | (fsm_state_ff == NN_INIT_OUT         )
+                 | (fsm_state_ff == NN_INIT_OUT_SYNC    )
                  | (fsm_state_ff == NN_STRING_CALC      ) & (fc_addr != PICT_SIZE) 
+                 | (fsm_state_ff == NN_INIT_CALC_SYNC   )
+                 | (fsm_state_ff == NN_STRING_RDY_SYNC  )
                  | (fsm_state_ff == NN_TANG_STRING_CALC )
                  | (fsm_state_ff == NN_OUT_CALC         ) & (fc_addr != PICT_SIZE-1);
 
 assign str_tg_en = (str_cnt == PICT_SIZE-1);
-
-assign col_en    =  (fc_addr == 0)  & (str_cnt == PICT_SIZE) & (rco_sel != 1) | (fc_addr == PICT_SIZE)  & (str_cnt == PICT_SIZE) & (rco_sel == 1);
-
-assign out_en    = (fsm_state_ff == NN_OUT_CALC    ) 
-                 | (fsm_state_ff == NN_INIT_OUT    )
-                 | (fsm_state_ff == NN_UPD_RCO_TYPE);
+assign col_en    = (fc_addr == PICT_SIZE)  & (str_cnt == PICT_SIZE);
+assign out_en    = (fsm_state_ff == NN_OUT_CALC      ) 
+                 | (fsm_state_ff == NN_INIT_OUT      )
+                 | (fsm_state_ff == NN_INIT_OUT_SYNC )
+                 | (fsm_state_ff == NN_UPD_RCO_TYPE     ) & (rco_sel == 2);
+                 ;
+assign addr_en   = ((fc_addr == PICT_SIZE) | (str_cnt == PICT_SIZE))? 0 : 1;
 
 // -------------------------------------------------------
-assign sel_data            = (fsm_state_ff == NN_LOAD_IMG) | (fsm_state_ff == NN_INIT) & start_i;
-
+always_ff @(posedge clk) begin
+  sel_data = (fsm_state_ff == NN_LOAD_IMG) | (fsm_state_ff == NN_INIT) & start_i;
+end
 // --------------------------------------------------------
 logic [RCO_TYPE-1:0] rco_sel_next;
 
@@ -301,13 +339,15 @@ assign rco_sel_next = rco_sel + RCO_TYPE'(1);
 
 assign init = (fsm_state_ff == NN_LOAD_IMG         ) 
             | (fsm_state_ff == NN_LD_MEM           ) 
-            | (fsm_state_ff == NN_STRING_RDY       ) 
+            | (fsm_state_ff == NN_UPD_RCO_SYNC     ) 
             | (fsm_state_ff == NN_TANG_STRING_CALC ) 
-            | (fsm_state_ff == NN_INIT_OUT         )
+            | (fsm_state_ff == NN_INIT_OUT_SYNC    )
             | (fsm_state_ff == NN_UPD_RCO_TYPE     )
             ; 
-assign en   = (fsm_state_ff == NN_STRING_CALC)
-            | (fsm_state_ff == NN_OUT_CALC   )
+assign en   = (fsm_state_ff == NN_STRING_CALC) 
+            | (fsm_state_ff == NN_OUT_CALC   ) & (out_addr != 1)
             | (fsm_state_ff == NN_OUT_RDY    )
+            | (fsm_state_ff == NN_STRING_SYNC)
+            | (fsm_state_ff == NN_INIT_OUT   )
             ;
 endmodule

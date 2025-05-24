@@ -57,42 +57,6 @@ class L2DST(nn.Module):
         
         return e1,e2
     
-class L2DST_1l(nn.Module):
-    def __init__(self, input_size, num_classes, device='cpu'):
-        super(L2DST_1l, self).__init__()
-        
-        self.L2DST = L2DST(input_size,input_size)
-        
-        dropout = 0.05
-        self.dropout = nn.Dropout(dropout)
-        
-        # self.BN1 = nn.LayerNorm((1,input_size,input_size))
-        
-        self.W_o = nn.Linear(input_size*input_size, num_classes, device=device)
-        
-        self.num_classes = num_classes
-
-        self.log_softmax = nn.LogSoftmax(dim=1)
-        
-        nn.init.xavier_uniform_(self.W_o.weight)
-
-    def forward(self, x):
-        # Multiply input by weights and add biases
-        
-        out = self.L2DST(x)
-        
-        out = out.reshape(out.shape[0],-1)
-        
-        out = self.log_softmax(self.dropout(self.W_o(out)))
-        
-        return out
-    
-    def get_embeddings(self,x):
-        e1,e2 = self.L2DST.get_embeddings(x)
-        
-        return e1,e2
-    
-    
     # Build the Neural Network
 input_size = 28  # 28x28 images flattened
 output_size = 10  # 10 classes for digits 0-9

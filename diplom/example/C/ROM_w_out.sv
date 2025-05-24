@@ -1,10 +1,4 @@
-`timescale 1ns / 1ps
-
-//////////////////////////////////////////////////////////////////////////////////
-// WEIGHT MEMORY (ROM)
-//////////////////////////////////////////////////////////////////////////////////
-
-  (* dont_touch = "yes" *) (* keep_hierarchy = "yes" *) 
+(* dont_touch = "yes" *) (* keep_hierarchy = "yes" *) 
 
 module ROM_w_out #(
     parameter int INT_BITS = 5,  // integer part
@@ -28,19 +22,7 @@ generate
           endcase
         end
       end
-    endgenerate
-
-generate
-  if (N == 1) begin
-     always @(posedge clk) begin
-       case(address)
-         10'b0000000000: data <= 13'h0006;
-         ...
-            default: data <= 0;
-          endcase
-        end
-      end
-    endgenerate
+endgenerate
 
 ...
 
@@ -54,7 +36,7 @@ generate
           endcase
         end
       end
-    endgenerate
+endgenerate
 
     assign dout = data;
 endmodule

@@ -40,10 +40,6 @@ valset = datasets.MNIST('c:/Docs/GitHub/Datasets/', download=False, train=False,
 img, label = valset[4]
 img_ = img.view(img.size(0), -1).squeeze().numpy()
 
-fig = plt.figure(figsize=(1,1))
-plt.imshow(img_.reshape(28,-1))
-# plt.colorbar()
-
 e1, e2 = model.get_embeddings(img)
 
 e1 = e1.squeeze(0)
@@ -188,8 +184,7 @@ for row in range(N):
         tmp = Tanh.calc(MAC_array[col].acc)
         RAM_bock.write_value(float(tmp), row*N + col) 
 
-# Copy for visualization
-FC1_out = RAM_bock.numpy()
+FC1_out = RAM_bock.numpy() # Copy for visualization
         
 # Column processing (stage 3)
 for col in range(N):
@@ -208,9 +203,8 @@ for col in range(N):
     for row in range(N):
         tmp = Tanh.calc(MAC_array[row].acc)
         RAM_bock.write_value(float(tmp), row*N + col) 
-
-# Copy for visualization        
-FC2_out = RAM_bock.numpy()
+      
+FC2_out = RAM_bock.numpy() # Copy for visualization
 
 # Classification (stage 4)
 final_result = []  # Softmax output
@@ -250,7 +244,7 @@ plt.imshow(FC1_out_)
 plt.title('Fixed point')
 plt.colorbar()
 plt.subplot(2,3,3)
-plt.imshow(e1.detach().numpy() - FC1_out_) # , vmax=1, vmin=-1
+plt.imshow(e1.detach().numpy() - FC1_out_) 
 plt.title('difference')
 plt.colorbar()
 
@@ -263,7 +257,7 @@ plt.imshow(FC2_out_)
 plt.title('Fixed point')
 plt.colorbar()
 plt.subplot(2,3,6)
-plt.imshow(e2.detach().numpy() - FC2_out_) # , vmax=1, vmin=-1
+plt.imshow(e2.detach().numpy() - FC2_out_) 
 plt.title('difference')
 plt.colorbar()
 

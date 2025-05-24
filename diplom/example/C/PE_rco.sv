@@ -1,8 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Module Name: PE_rco
-// Project Name: LST-1 model
-//////////////////////////////////////////////////////////////////////////////////
 
   (* dont_touch = "yes" *) (* keep_hierarchy = "yes" *) 
 
@@ -11,9 +7,9 @@ module PE_rco#(
     parameter int FRC_BITS = 7, // fractional part
     parameter int N = 0 // block number
 )(
-    input logic clk,    // clock
-    input logic init,   // write initial value
-    input logic en,     // execute MAC-operation
+    input logic       clk,    // clock
+    input logic       init,   // write initial value
+    input logic       en,     // execute MAC-operation
     input logic [4:0] address_row,
     input logic [4:0] address_col,
     input logic [9:0] address_o,
@@ -25,14 +21,17 @@ module PE_rco#(
 // Internal signals
 logic [INT_BITS + FRC_BITS-1:0] rom_row_out, rom_col_out, rom_w_out, mux_rom;
 logic [4:0] addr_row, addr_col;
+logic [9:0] addr_o;
+logic [INT_BITS + FRC_BITS-1:0] din_reg;
 assign addr_row = (init)? 0 : address_row+1;
 assign addr_col = (init)? 0 : address_col+1;
+assign addr_o   = (init)? 0 : address_o+1;
 
 ROM_row #(.INT_BITS(INT_BITS), .FRC_BITS(FRC_BITS), .N(N)) rom_row(.address(addr_row), .dout(rom_row_out), .clk(clk));
 ROM_col #(.INT_BITS(INT_BITS), .FRC_BITS(FRC_BITS), .N(N)) rom_col(.address(addr_col), .dout(rom_col_out), .clk(clk));
 ROM_w_out #(.INT_BITS(INT_BITS), .FRC_BITS(FRC_BITS), .N(N)) rom_w(.address(address_o), .dout(rom_w_out), .clk(clk));
 
-always_comb begin : MUX_ROM
+always_ff @( posedge clk ) begin : MUX_ROM
  unique case (rco_sel)
     2'b00: mux_rom = rom_row_out;
     2'b01: mux_rom = rom_col_out;

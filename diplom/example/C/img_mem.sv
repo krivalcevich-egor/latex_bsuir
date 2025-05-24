@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+(* dont_touch = "yes" *) (* keep_hierarchy = "yes" *)
 
 module img_mem 
   import nn_param_pkg::*;
@@ -19,5 +19,11 @@ module img_mem
        end
      end
 
-    assign dout = (!we & en)? data[addr] : 0;
+     always @(posedge clk) begin
+       if(!we & en) begin
+         dout <= data[addr];
+       end else begin
+         dout <= 'h0;
+       end
+     end
 endmodule
