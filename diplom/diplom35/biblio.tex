@@ -1,0 +1,86 @@
+\clearpage % Новый лист для списка литературы
+\renewcommand{\refname}{\begin{center}СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ\end{center}\vspace*{-2.0em}} % Установка заголовка списка
+
+\makeatletter
+\renewcommand{\@biblabel}[1]{[#1]\hfill} % Выравнивание номера ссылки
+\renewenvironment{thebibliography}[1]
+     {\section*{\refname}%
+      \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+      \begin{list}{\@biblabel{\arabic{enumi}}}{%
+          \setlength{\leftmargin}{0pt} % Убираем отступы
+          \setlength{\labelwidth}{1em} % Убираем ширину метки
+          \setlength{\itemindent}{1.25cm} % Убираем отступы на первой строке
+          \setlength{\itemsep}{0.15em} % Убираем отступы между элементами
+          \setlength{\parsep}{0pt} % Убираем дополнительный вертикальный отступ
+          \usecounter{enumi}%
+          \let\p@enumi\@empty
+          \renewcommand{\theenumi}{\arabic{enumi}}}%
+      \sloppy
+      \clubpenalty4000
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\end{list}}
+\makeatother
+
+\addcontentsline{toc}{section}{\hspace*{-1em}Список использованных источников}\par
+
+\begin{thebibliography}{99}
+    \setlength{\itemindent}{1.95cm} % Убираем отступы для первой строки
+    \setlength{\leftmargin}{1.25cm} % Обнуляем отступы для правильного форматирования
+    \setlength{\labelsep}{2mm} % Убираем стандартный отступ после номера
+
+    \raggedright% Выравнивание по левому краю (без отступов)
+    \justifying
+    \bibitem{ITS2024} Кривальцевич, Е. А. FPGA реализация нейронной сети прямого распространения для распознавания рукописных чисел / Е. А. Кривальцевич, М. И. Вашкевич // Информационные технологии и системы 2024 (ИТС 2024) = Information Technologies and Systems 2024 (ITS 2024) : материалы международной научной конференции, Минск, 20 ноября 2024 г. / Белорусский государственный университет информатики и радиоэлектроники ; редкол. : Л. Ю. Шилин [и др.]. – Минск, 2024. – С. 85–86.
+    
+    \bibitem{Doc} Кривальцевич. Е. А. Исследование аппаратной реализации нейронной сети прямого распространения для распознавания рукописных цифр на базе FPGA = Investigation of hardware implementation of a feedforward neural network for handwritten digit recognition based on FPGA / Е. А. Кривальцевич, М. И. Вашкевич// Доклады БГУИР. – 2025. – Т. 23, № 2. – С. 101–108.
+    
+    \bibitem{CNN} Bouvrie J. Notes on convolutional neural networks. – 2006.
+    
+    \bibitem{Giardino} Giardino D. et al. FPGA implementation of hand-written number recognition based on CNN // International Journal on Advanced Science, Engineering and Information Technology. – 2019. – Т. 9. – No. 1. – P. 167-171. 
+    
+    \bibitem{Varsamopoulos} Varsamopoulos S. Neural network based decoders for the surface code. – 2019.
+    
+    \bibitem{Agrawal} Agrawal V., Jagtap J., Kantipudi M. V. V. P. Decoded-ViT: A Vision Transformer Framework for Handwritten Digit String Recognition //Revue d'Intelligence Artificielle. – 2024. – Т. 38. – №. 2. – С. 523.
+    
+    \bibitem{Performance} Agrawal V. et al. Performance analysis of hybrid deep learning framework using a vision transformer and convolutional neural network for handwritten digit recognition //MethodsX. – 2024. – Т. 12. – С. 102554.
+    
+    \bibitem{LST2D} Vashkevich M., Krivalcevich E. Compact and Efficient Neural Networks for Image Recognition Based on Learned 2D Separable Transform //2025 27th International Conference on Digital Signal Processing and its Applications (DSPA). – IEEE, 2025. – С. 1-6.
+    
+    \bibitem{ZYBO} Digilent Inc. ZYBO Z7 Reference Manual, [Электронный ресурс]. – Режим доступа: https://digilent.com/reference/programmable-logic/zybo-z7/reference-manual
+    
+    \bibitem{MNIST} MNIST Handwritten Numbers database [Электронный ресурс] – Электронные данные – Режим доступа: https://yann.lecun.com/exdb/mnist/Mittal
+
+    \bibitem{vivado_axi} Xilinx, {AXI Reference Guide} [Электронный ресурс] – Электронные данные – Режим доступа: https://docs.amd.com/v/u/en-US/ug1037-vivado-axi-reference-guide, 2017.
+
+    \bibitem{chu_fpga} Chu P. P. FPGA prototyping by Verilog examples: Xilinx Spartan-3 version. – John Wiley \& Sons, 2011.
+
+    \bibitem{Tokheim2003} Tokheim, R.L. Digital Electronics: Principles and Applications. – McGraw-Hill, 2003. – 480 p.
+
+    \bibitem{Katz1994} Katz, R.H. Contemporary Logic Design. – Benjamin-Cummings, 1994. – 700 p.
+
+    \bibitem{XilinxUG} Xilinx Inc. {Vivado Design Suite User Guide} [Электронный ресурс] – Электронные данные – Режим доступа: https://www.xilinx.com/support/documents/sw\_manuals/xilinx2022\_1/ug892-vivado-design-flows-overview.pdf.  
+
+    \bibitem{TANH}  Medus L. D. et al. A novel systolic parallel hardware architecture for the FPGA acceleration of feedforward neural networks //IEEE Access. – 2019. – Т. 7. – С. 76084-76103.
+
+    \bibitem{ZYNQ} Xilinx, Zynq-7000 SoC Technical Reference Manual, [Электронный ресурс]. — Режим доступа: https://www.xilinx.com/support/documentation/user\_guides/ug585-Zynq-7000-TRM.pdf
+
+    \bibitem{PYNQ-IMG} Li H. et al. An FPGA implementation of Bayesian inference with spiking neural networks //Frontiers in Neuroscience. – 2024. – Т. 17. – С. 1291051.
+    
+    \bibitem{PYNQ} Xilinx, PYNQ: Python Productivity for Zynq, [Электронный ресурс]. — Режим доступа: http://www.pynq.io
+
+    \bibitem{Liang} S. Liang, S. Yin, L. Liu, W. Luk, and S. Wei, “FP-BNN: Binarized
+    neural network on FPGA,” Neurocomputing, vol. 275, pp. 1072–1086,
+    2018
+    
+    \bibitem{Umuroglu} Y. Umuroglu, N. J. Fraser, G. Gambardella, M. Blott, P. Leong, M. Jahre,
+    and K. Vissers, “FINN: A framework for fast, scalable binarized
+    neural network inference,” in Proceedings of the 2017 ACM/SIGDA
+    international symposium on field-programmable gate arrays, 2017, pp.
+    65–74.
+    
+    \bibitem{Huynh} T. V. Huynh, “Deep neural network accelerator based on FPGA,” in 4th NAFOSTED Conference on Information and Computer Science, 2017, pp. 254--257.
+    
+    \bibitem{Westby} I. Westby, et al. “FPGA acceleration on a multilayer perceptron neural network for digit recognition,” \textit{Journal of Supercomputing}, 2021, vol. 77, no. 12, pp. 356--373.
+    
+\end{thebibliography}

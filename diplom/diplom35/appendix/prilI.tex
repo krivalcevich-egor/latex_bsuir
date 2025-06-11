@@ -1,0 +1,53 @@
+% \clearpage
+\phantomsection% ensures hyperref works properly
+\addcontentsline{toc}{section}{\hspace*{-1em}Приложение Г (обязательное) Verilog описание устройства}\par
+
+\normalsize
+\begin{center}
+  \textbf{ПРИЛОЖЕНИЕ Г} \\
+  \textbf{(обязательное)} \\
+  \textbf{Verilog описание устройства}
+\end{center}
+
+Модуль верхнего уровня:
+
+\lstinputlisting[language=Verilog]{C/fc.sv}
+
+Модуль памяти изображения:
+
+\lstinputlisting[language=Verilog]{C/img_mem.sv}
+
+Модуль обработки пикселя:
+
+\lstinputlisting[language=Verilog]{C/PE_rc.sv}
+\lstinputlisting[language=Verilog]{C/PE_rco.sv}
+
+Модуль памяти строк:
+
+\lstinputlisting[language=Verilog]{C/ROM_row.sv}
+
+Модуль памяти столбцов:
+
+\lstinputlisting[language=Verilog]{C/ROM_col.sv}
+
+Модуль памяти выходных весов:
+
+\lstinputlisting[language=Verilog]{C/ROM_w_out.sv}
+
+Модуль MAC:\@
+
+\lstinputlisting[language=Verilog]{C/mac_core.sv}
+
+Модуль тангенса:
+
+\lstinputlisting[language=Verilog]{C/tanh_function.sv}
+
+Модуль softmax:
+
+\lstinputlisting[language=Verilog]{C/softmax.sv}
+
+% Восстановление размера страницы A4
+\pdfpagewidth=210mm
+\pdfpageheight=297mm
+
+% \clearpage
