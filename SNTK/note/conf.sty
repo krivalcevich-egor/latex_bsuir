@@ -1,0 +1,185 @@
+\NeedsTeXFormat{LaTeX2e} \ProvidesPackage{nal} \ProcessOptions
+\usepackage[utf8]{inputenc} 
+\usepackage[T2A]{fontenc}
+\usepackage[latin, russian]{babel}
+\usepackage{latexsym} 
+\usepackage[pdftex]{graphicx}
+\usepackage[left=3cm,right=2.0cm,top=1.5cm,bottom=2.7cm,bindingoffset=0cm]{geometry}
+\usepackage{enumitem} 
+\usepackage{tabularx} 
+\usepackage{xparse}
+\usepackage{pgffor} 
+\usepackage{fancyhdr} 
+\usepackage{regexpatch} 
+\usepackage[T1]{fontenc}
+\usepackage[hyphens]{url}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{tabu}
+\usepackage{setspace}
+\usepackage{floatflt}
+\usepackage[center,small]{caption2}
+\renewcommand{\captionlabeldelim}{~--}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{makeidx}
+\usepackage{pgf,pgffor}
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}}
+\titleformat{\section}[block]{\vspace{-8pt}\normalsize\scshape\centering}{\thesection.}{1em}{\vspace{-5pt}} 
+\usepackage{fixltx2e}
+\usepackage{indentfirst}
+\makeatletter
+\parindent=0.8cm
+\widowpenalty = 10000
+\clubpenalty = 10000
+\postdisplaypenalty =100
+
+\setlist{nolistsep}
+\setlength{\headsep}{2pt}
+\setlength{\voffset}{1.2cm}
+
+%------------------------------------------------
+% Команда для вывода строки конференции
+\newcommand{\conferenceinfo}[2]{%
+  \fancyhf{} 
+  \fancyhead[C]{#1-я Научная Конференция Аспирантов, Магистрантов и Студентов БГУИР, г.~Минск, #2}
+  \fancyfoot[C]{\thepage}
+  \pagestyle{fancy} 
+}
+
+
+%------------------------------------------------
+% Команда для вывода информации об авторе
+\newcommand{\information}[1]{
+\begin{center}
+    {\normalsize #1}\\
+    {\small Белорусский государственный университет информатики и радиоэлектроники}\\
+    {\small г.~Минск, Республика Беларусь}
+\end{center}
+}
+
+\newcommand{\informationEN}[1]{
+\begin{center}
+    {\normalsize #1}\\
+    {\small Belarusian State University of Informatics and Radioelectronics}\\
+    {\small Minsk, Republic of Belarus}
+\end{center}
+}
+
+%------------------------------------------------
+% Команда для вывода УДК
+\newcommand{\udk}[1]{
+\noindent\textbf{УДК}~#1
+}
+
+\newcommand{\udkEN}[1]{
+\noindent\textbf{UDC}~#1
+}
+
+%------------------------------------------------
+% Команда для вывода научного руководителя 
+\newcommand{\supervisor}[1]{
+\begin{flushright}
+#1
+\end{flushright}
+}
+
+\newcommand{\l@abcd}[2]{\noindent{\parbox[t]{\textwidth}{\raggedright #1\dotfill #2 }}}
+
+%------------------------------------------------
+% Команда для вывода темы без лишних отступов
+\newcommand{\topic}[1]{
+\begin{center}
+    {\bfseries\Large\MakeUppercase{#1}}
+\end{center}
+}
+
+%------------------------------------------------
+% Команда для вставки аннотации
+\newcommand{\annotation}[1]{
+  {\noindent\bf{Аннотация. }\normalfont}
+	\leftskip=1cm\rightskip=1cm\it\small\noindent{#1}  
+	\normalsize\normalfont\leftskip=0cm \rightskip=0cm \indent }
+
+\newcommand{\annotationEN}[1]{
+  {\noindent\bf{Annotation. }\normalfont}
+	\leftskip=1cm\rightskip=1cm\it\small\noindent{#1}  
+	\normalsize\normalfont\leftskip=0cm \rightskip=0cm \indent \vspace{8pt}}
+
+%------------------------------------------------
+% Команда для вставки ключевых слов
+\newcommand{\keyword}[1]{
+  {\noindent\bf{Ключевые слова. }\normalfont}
+	\leftskip=1cm\rightskip=1cm\it\small\noindent{#1}  
+	\normalsize\normalfont\leftskip=0cm \rightskip=0cm \indent }
+
+\newcommand{\keywordEN}[1]{
+  {\noindent\bf{Keywords. }\normalfont}
+	\leftskip=1cm\rightskip=1cm\it\small\noindent{#1}  
+	\normalsize\normalfont\leftskip=0cm \rightskip=0cm \indent }
+
+%------------------------------------------------
+% Команда для работы с главами
+\newcommand{\topChapter}[1]{{\normalsize\normalfont \leftskip=0cm \rightskip=0cm\bf \noindent #1 \\[10pt]}}
+\newcommand{\content}[1]{\normalsize\normalfont\leftskip=0cm \rightskip=0cm \indent #1 }
+
+%------------------------------------------------
+% Команда для вставки списка источников
+\newcounter{refcount}
+
+% Среда для списка источников
+\newenvironment{ListReferences}{
+  \setcounter{refcount}{0}
+  \par\small 
+  \setlength{\parskip}{1pt}
+  \setlength{\parsep}{0pt}
+}{
+  \par
+}
+
+%------------------------------------------------
+% Команда для отдельного источника внутри среды
+\newcommand{\refitem}[2]{
+  \refstepcounter{refcount}
+  \noindent[\arabic{refcount}]~#2\label{#1}\par
+}
+
+%------------------------------------------------
+% Команда для вставки таблицы
+\newcommand{\myTable}[2]{
+\vspace{-10pt} 
+\begin{table}[H]\small 
+\noindent
+\caption{#1}
+    \centering
+    \begin{tabularx}
+        #2
+    \end{tabularx}
+\end{table}
+\normalsize\normalfont\leftskip=0cm \rightskip=0cm\vspace{-10pt}
+}
+
+%------------------------------------------------
+% Команда для вставки изображения png
+\newcommand{\image}[1]{
+\vspace{-8pt}
+\begin{figure}[H]
+\centering
+\includegraphics #1
+\end{figure}
+\vspace{-8pt}
+\normalsize\normalfont\leftskip=0cm\rightskip=0cm
+}
+
+\RequirePackage{wrapfig}
+\makeindex
+
+
+
+
+

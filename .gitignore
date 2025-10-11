@@ -16,6 +16,9 @@
 *.bbl
 *.blg
 *.brf
+*.idx
+*.ilg
+*.ind
 
 # Editor backup files
 *~
